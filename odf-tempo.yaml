@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: odf-tempo
+  namespace: tempo-stack
+type: Opaque
+stringData:
+  endpoint: https://s3.openshift-storage.svc
+  bucket: tempo-bucket-7915e9c6-7dd2-4bc2-8be3-2a85cb5738db
+  access_key_id: B40hGtEOz6yhs68ShzJw
+  access_key_secret: Vq8XiY7mXjIx/ms2kPGbmbzLAkFjWHeDOv2QdjN2
