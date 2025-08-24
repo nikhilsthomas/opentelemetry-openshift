@@ -1,0 +1,16 @@
+apiVersion: tempo.grafana.com/v1alpha1
+kind: TempoStack
+metadata:
+ name: prod
+spec:
+ storage:
+   secret:
+     name: odf-tempo
+     type: s3
+ storageSize: 1Gi
+ template:
+   queryFrontend:
+     jaegerQuery:
+       enabled: true
+       ingress:
+         type: route
