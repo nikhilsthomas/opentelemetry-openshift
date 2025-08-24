@@ -1,0 +1,7 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: petclinic
+spec:
+  exporter:
+    endpoint: http://otel-collector:4317
