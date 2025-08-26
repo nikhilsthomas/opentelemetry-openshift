@@ -3,21 +3,36 @@ kind: OpenTelemetryCollector
 metadata:
  name: otel
 spec:
+  mode: deployment
+  observability:
+    metrics:
+      enableMetrics: true
   config: |
+    connectors:
+      spanmetrics:
+        metrics_flush_interval: 15s
     receivers:
       otlp:
         protocols:
           grpc:
+          http:
     exporters:
+      prometheus:
+        endpoint: 0.0.0.0:8889
+        add_metric_suffixes: false
+        resources_to_telemetry_conversion:
+          enabled: true
+    
       otlp:
         endpoint: tempo-prod-distributor:4317
         tls:
           insecure: true
-    processors:
-      batch:
+          
     service:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [batch]
-          exporters: [otlp]
+          exporters: [otlp, spanmetrics]
+        metrics:
+          receivers: [spanmetrics]
+          exporters: [prometheus]
