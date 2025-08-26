@@ -20,7 +20,7 @@ spec:
       prometheus:
         endpoint: 0.0.0.0:8889
         add_metric_suffixes: false
-        resources_to_telemetry_conversion:
+        resource_to_telemetry_conversion:
           enabled: true
     
       otlp:
