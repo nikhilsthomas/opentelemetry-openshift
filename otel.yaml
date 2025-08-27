@@ -11,6 +11,7 @@ spec:
     connectors:
       spanmetrics:
         metrics_flush_interval: 15s
+        
     receivers:
       otlp:
         protocols:
@@ -22,9 +23,10 @@ spec:
         add_metric_suffixes: false
         resource_to_telemetry_conversion:
           enabled: true
-    
       otlp:
         endpoint: tempo-prod-distributor:4317
+        headers:
+          X-Scope-OrgID: dev
         tls:
           insecure: true
           
