@@ -1,0 +1,22 @@
+#check if exists:
+oc -n openshift-monitoring get configmap cluster-monitoring-config
+
+-------
+#if not:
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+
+-----
+
+oc apply -f cluster-monitoring-config.yaml
+
+
+
+
+#USER WORKLOAD:
+
