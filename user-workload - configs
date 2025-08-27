@@ -20,3 +20,17 @@ oc apply -f cluster-monitoring-config.yaml
 
 #USER WORKLOAD:
 
+#check if exists:
+oc -n openshift-user-workload-monitoring get configmap user-workload-monitoring-config
+
+#if does not exist, use:
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-workload-monitoring-config
+  namespace: openshift-user-workload-monitoring
+data:
+  config.yaml: |
+
+#apply:
+oc apply -f user-workload-monitoring-config.yaml
