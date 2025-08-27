@@ -10,15 +10,14 @@ spec:
         tenantId: "1610b0c3-c509-4592-a256-a1871353dbfa"
       - tenantName: prod
         tenantId: "1610b0c3-c509-4592-a256-a1871353dbfb"
-  template:
-    gateway:
-      enabled: true
   storage:
     secret:
       name: odf-tempo
       type: s3
   storageSize: 1Gi
   template:
+    gateway:
+      enabled: true
     queryFrontend:
       jaegerQuery:
         enabled: true
