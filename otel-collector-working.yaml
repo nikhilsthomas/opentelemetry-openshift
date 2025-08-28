@@ -44,9 +44,9 @@ spec:
         sampling_initial: 5
         sampling_thereafter: 200
       
-      # OTLP HTTP exporter to Tempo distributor
+      # Option 1: OTLP HTTP exporter (standard port)
       otlphttp:
-        endpoint: http://tempo-prod-distributor:3200/otlp
+        endpoint: http://tempo-prod-distributor:4318
         headers:
           X-Scope-OrgID: petclinic
         retry_on_failure:
