@@ -1,0 +1,42 @@
+# This file shows the correct approach for enabling traces in OpenShift Console
+# The Cluster Observability Operator should automatically provide the console plugin
+
+---
+# 1. Ensure the Cluster Observability Operator is installed
+# This is typically done through the OperatorHub in OpenShift Console
+# or via CLI: oc apply -f cluster-observability-operator-subscription.yaml
+
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: cluster-observability-operator
+  namespace: openshift-operators
+spec:
+  channel: development
+  name: cluster-observability-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+---
+# 2. The Console Plugin should be automatically enabled when the operator is installed
+# If not automatically enabled, you can manually enable it via the Console Operator:
+
+apiVersion: operator.openshift.io/v1
+kind: Console
+metadata:
+  name: cluster
+spec:
+  plugins:
+    - distributed-tracing-console-plugin  # This plugin name should already exist
+---
+# 3. Optional: ConfigMap for additional Tempo configuration (if needed)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-console-config
+  namespace: openshift-tempo-operator
+data:
+  config.yaml: |
+    tempo:
+      endpoint: https://tempo-multitenant-query-frontend.tempo.svc.cluster.local:3200
+      # Note: Multi-tenancy is currently not supported in the OpenShift Console UI
+      # Traces from all tenants may be visible together
