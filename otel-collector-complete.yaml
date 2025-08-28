@@ -44,8 +44,23 @@ spec:
         sampling_initial: 5
         sampling_thereafter: 200
       
-      # OTLP exporter to Tempo distributor
-      otlp:
+      # OTLP HTTP exporter to Tempo distributor (HTTP is more reliable)
+      otlphttp:
+        endpoint: http://tempo-prod-distributor:3200/otlp/v1/traces
+        headers:
+          X-Scope-OrgID: petclinic
+        retry_on_failure:
+          enabled: true
+          initial_interval: 5s
+          max_interval: 30s
+          max_elapsed_time: 300s
+        sending_queue:
+          enabled: true
+          num_consumers: 10
+          queue_size: 5000
+      
+      # Alternative: OTLP gRPC with different port
+      otlp_grpc:
         endpoint: tempo-prod-distributor:4317
         headers:
           X-Scope-OrgID: petclinic
@@ -83,7 +98,7 @@ spec:
         traces:
           receivers: [otlp]
           processors: [resource, batch]
-          exporters: [debug, otlp, spanmetrics]
+          exporters: [debug, otlphttp, spanmetrics]
         
         metrics:
           receivers: [spanmetrics]
