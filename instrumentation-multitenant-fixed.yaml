@@ -1,0 +1,30 @@
+---
+# Instrumentation for Dev Environment
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: petclinic-dev
+  namespace: default
+spec:
+  exporter:
+    endpoint: http://otel-dev-collector.observability.svc.cluster.local:4317
+  env:
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: "service.name=petclinic,environment=dev"
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: "X-Scope-OrgID=1610b0c3-c509-4592-a256-a1871353dbfa"
+---
+# Instrumentation for Prod Environment  
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: petclinic-prod
+  namespace: default
+spec:
+  exporter:
+    endpoint: http://otel-prod-collector.observability.svc.cluster.local:4317
+  env:
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: "service.name=petclinic,environment=prod"
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: "X-Scope-OrgID=1610b0c3-c509-4592-a256-a1871353dbfb"
