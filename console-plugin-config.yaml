@@ -1,0 +1,36 @@
+---
+apiVersion: console.openshift.io/v1alpha1
+kind: ConsolePlugin
+metadata:
+  name: distributed-tracing-console-plugin
+spec:
+  displayName: "Distributed Tracing"
+  service:
+    name: distributed-tracing-console-plugin
+    namespace: openshift-tempo-operator
+    port: 8080
+    basePath: "/"
+---
+apiVersion: operator.openshift.io/v1
+kind: Console
+metadata:
+  name: cluster
+spec:
+  plugins:
+    - distributed-tracing-console-plugin
+---
+# Tempo Console Plugin Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-console-config
+  namespace: tempo
+data:
+  config.yaml: |
+    tempo:
+      endpoint: https://tempo-multitenant-query-frontend.tempo.svc.cluster.local:3200
+      tenants:
+        - name: dev
+          id: "1610b0c3-c509-4592-a256-a1871353dbfa"
+        - name: prod
+          id: "1610b0c3-c509-4592-a256-a1871353dbfb"
