@@ -26,9 +26,13 @@ oc apply -f tempostack-multitenant.yaml
 oc apply -f otel-collector-multitenant.yaml
 ```
 
-### 4. Configure Console Plugin (if not automatically enabled)
+### 4. Ensure Cluster Observability Operator is installed
 ```bash
-oc apply -f console-plugin-config.yaml
+# Install via OperatorHub in OpenShift Console, or apply:
+oc apply -f cluster-observability-setup.yaml
+
+# Verify the distributed tracing console plugin is enabled:
+oc get console cluster -o jsonpath='{.spec.plugins}'
 ```
 
 ### 5. Deploy Instrumentation configurations
@@ -48,6 +52,9 @@ oc apply -f petclinic-deployment-multitenant.yaml
 - **Authentication**: Configured dev and prod tenants with unique IDs
 - **Gateway**: Enabled for multi-tenant routing
 - **RBAC**: Added ClusterRole and ClusterRoleBinding for trace access
+
+### Important Note on Multi-Tenancy in OpenShift Console
+⚠️ **Current Limitation**: As of 2024, the OpenShift Console Traces UI does not fully support multi-tenancy. While your backend (TempoStack) will properly separate traces by tenant, the OpenShift Console UI may show traces from all tenants together. For true tenant isolation in the UI, you may still need to use the Jaeger Query UI or implement custom dashboards.
 
 ### 2. OpenTelemetry Collectors
 - **Separate Collectors**: One for dev, one for prod
