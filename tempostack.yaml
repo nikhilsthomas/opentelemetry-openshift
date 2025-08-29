@@ -1,29 +1,28 @@
+#Applied
+
 apiVersion: tempo.grafana.com/v1alpha1
 kind: TempoStack
 metadata:
- name: prod
+  name: tempo
 spec:
+  storage:
+    secret:
+      name: tempo-storage
+      type: s3
+  storageSize: 1Gi
+  resources:
+    total:
+      limits:
+        memory: 2Gi
+        cpu: 2000m
   tenants:
     mode: openshift
     authentication:
       - tenantName: dev
-        tenantId: "1610b0c3-c509-4592-a256-a1871353dbfa"
-      - tenantName: prod
-        tenantId: "1610b0c3-c509-4592-a256-a1871353dbfb"
-  storage:
-    secret:
-      name: odf-tempo
-      type: s3
-  storageSize: 1Gi
+        tenantId: "1610b0c3-c509-4592-a256-a1871353dbfa" #CHANGE
   template:
     gateway:
       enabled: true
     queryFrontend:
       jaegerQuery:
-        enabled: true
-        monitorTab:
-          enabled: true
-          prometheusEndpoint: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
-         
-       ingress:
-         type: route
+        enabled: false 
