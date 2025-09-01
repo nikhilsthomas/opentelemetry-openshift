@@ -1,0 +1,5 @@
+# Create dedicated namespace for Tempo components
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tempo

@@ -1,0 +1,99 @@
+# PetClinic applications for dev and prod environments
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic-dev
+  namespace: default
+  labels:
+    app: petclinic
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      environment: dev
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        environment: dev
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: petclinic-dev
+    spec:
+      containers:
+      - image: springcommunity/spring-framework-petclinic:6.0.3
+        name: petclinic
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ENVIRONMENT
+          value: "dev"
+        - name: OTEL_SERVICE_NAME
+          value: "petclinic-dev"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "service.name=petclinic,environment=dev,tenant=dev"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic-prod
+  namespace: default
+  labels:
+    app: petclinic
+    environment: prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: petclinic
+      environment: prod
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        environment: prod
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: petclinic-prod
+    spec:
+      containers:
+      - image: springcommunity/spring-framework-petclinic:6.0.3
+        name: petclinic
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ENVIRONMENT
+          value: "prod"
+        - name: OTEL_SERVICE_NAME
+          value: "petclinic-prod"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "service.name=petclinic,environment=prod,tenant=prod"
+---
+# Services for the deployments
+apiVersion: v1
+kind: Service
+metadata:
+  name: petclinic-dev
+  namespace: default
+spec:
+  selector:
+    app: petclinic
+    environment: dev
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: petclinic-prod
+  namespace: default
+spec:
+  selector:
+    app: petclinic
+    environment: prod
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: ClusterIP
